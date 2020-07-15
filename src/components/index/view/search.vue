@@ -1,11 +1,11 @@
 <template>
   <div>
-    <input type="text" v-model="keyword"><button @click="search">搜索</button>
+    <input type="text" v-model="keyword"><button @click="search(keyword)">搜索</button>
     <div v-if="suggest.length == 0 && result.length == 0">
     <li v-for="item in hotlist" :key="item.first">{{item.first}}</li>
     </div>
-    <div v-if="!(result && !keyword)">
-      <li v-for="item in suggest" :key="item.keyword">{{item.keyword}}</li>
+    <div v-if="keyword">
+      <li v-for="item in suggest" :key="item.keyword" @click="search(item.keyword)">{{item.keyword}}</li>
     </div>
     <song-list v-for="item in result" :key="item.id" :song="item"></song-list>
   </div>
@@ -36,9 +36,9 @@ export default {
     }
   },
   methods:{
-    search(){
+    search(key){
       getData.search({
-        keywords: this.keyword
+        keywords: key
       })
       .then(res=>{
         if(res.data.code == 200){
